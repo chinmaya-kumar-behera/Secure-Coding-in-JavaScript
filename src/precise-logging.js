@@ -1,43 +1,35 @@
-import fs from "fs";
-const trigger = () => {
-  const sender = "Uttam Mahanty";
-  const receiver = "John Doe";
-  const amount = 1000;
+import { DateTime } from 'luxon';
+import fs from 'fs';
 
-  fundTransfer(sender, receiver, amount);
-};
 
-const fundTransfer = (sender, receiver, amount) => {
-  console.log(" making the transaction");
+export function trigger(){
+    const sender = "user123";
+    const recipient = "user456";
+    const amount = 100.0;
+    transferFunds(sender, recipient, amount);
+}
 
-  setTimeout(() => {
-    console.log("Transaction completed");
-  }, 2000);
-
-  writeLog(sender, receiver, amount);
-};
-
-const writeLog = (sender, receiver, amount) => {
-  const timeStamp = new Date();
-
-  const logObject = {
-    sender: sender,
-    receiver: receiver,
-    amount: amount,
-  };
-
-  const logResult = fs.appendFile(
-    "transaction.log",
-    `${timeStamp} - ${JSON.stringify(logObject)}\n`,
-    (err) => {
-      if (err) {
-        console.error("Error writing to log file:", err);
-      } else {
-        console.log("Log written successfully");
-      }
+function writeLog(logMessage) {
+  const timestamp = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
+  const logEntry = `[${timestamp}] ${logMessage}\n`
+  fs.appendFile('application.log', logEntry, (err) => {
+    if (err) {
+      console.error('Error writing log:', err);
     }
-  );
-};
+  });
+}
+
+function transferFunds(sender, recipient, amount) {
+  // Perform the funds transfer
+  // ...
+
+  const logMessage = {
+    action: "transfer",
+    sender: sender,
+    recipient: recipient,
+    amount: amount
+  };
+  writeLog(JSON.stringify(logMessage));
+}
 
 
-trigger();
